@@ -19,12 +19,12 @@ function findClientById($id)
 }
 
 function getClientByTel($tel){
-    $result = [];
+    // $result = [];
+
     $clients = findAllClients();
     foreach ($clients as $etudiant) {
         if ($etudiant['telephone']== $tel) {
-            $result[] = $etudiant;
-            return $result ;
+            return $etudiant ;
         }
     }
 }

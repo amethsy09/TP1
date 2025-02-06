@@ -26,11 +26,11 @@
             <div class="flex space-x-4">
                 <div class="flex-1">
                     <label for="nom" class="block text-sm text-gray-700">Nom</label>
-                    <input type="text" id="nom" readonly name="nom" placeholder="Entrez le nom" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<?= htmlspecialchars($nom) ?>">
+                    <input type="text" id="nom" readonly name="nom" placeholder="Entrez le nom" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<?= $_SESSION['client']["nom"] ?? ""  ?>">
                 </div>
                 <div class="flex-1">
                     <label for="prenom" class="block text-sm text-gray-700">Prénom</label>
-                    <input type="text" id="prenom" readonly name="prenom" placeholder="Entrez le prénom" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<?= htmlspecialchars($prenom) ?>">
+                    <input type="text" id="prenom" readonly name="prenom" placeholder="Entrez le prénom" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" value="<?= $_SESSION['client']["prenom"] ?? "" ?>">
                 </div>
             </div>
             <h2 class="text-xl font-bold text-gray-800">Ajouter un Article</h2>
@@ -54,28 +54,31 @@
                     </tr>
                 </thead>
                 <tbody>
+
                     <?php foreach ($_SESSION['articles'] as $art) : ?>
                         <tr>
                             <td class="border p-3"><?= htmlspecialchars($art['article']); ?></td>
-                            <td class="border p-3"><?=number_format($art['prix_unitaire']); ?> FCFA</td>
-                            <td class="border p-3"><?=htmlspecialchars($art['quantite']); ?></td>
+                            <td class="border p-3"><?= number_format((float)$art['prix_unitaire'], 0, ',', ' ') . ' FCFA'; ?></td>
+                            <td class="border p-3"><?= htmlspecialchars($art['quantite']); ?></td>
                             <td class="border p-3">
-                                <?=
-                                $montant = $art['prix_unitaire'] * $art['quantite'];
-                                 number_format($montant) . ' FCFA';
+                                <?php
+                                $montant = (float)$art['prix_unitaire'] * (int)$art['quantite'];
+                                echo number_format($montant, 0, ',', ' ') . ' FCFA';
                                 ?>
                             </td>
                             <td class="border p-3">
-                                <a href="?supprimer=<?php echo $art['id']; ?>" class="text-red-600 hover:text-red-800">Supprimer</a>
+                                <a href="<?= WEBROOT ?>?controller=commandes&page=ajout&supprimer=<?php echo $art['id']; ?>" class="text-red-600 hover:text-red-800">🗑</a>
+                                <a href="<?= WEBROOT ?>?controller=commandes&page=ajout&modifier=<?php echo $art['id']; ?>" class="text-red-600 hover:text-red-800">⚙</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
+
                 </tbody>
             </table>
 
             <!-- Total & Commander -->
             <div class="mt-6 flex justify-between items-center">
-                <span class="text-2xl font-bold text-gray-800">Total : FCFA</span>
+                <span class="text-2xl font-bold text-gray-800">Total :<?php echo $total; ?> FCFA</span>
                 <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition duration-300">Commander</button>
             </div>
         </div>
