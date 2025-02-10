@@ -90,7 +90,29 @@ if (isset($_REQUEST['page'])) {
                 }
             }
         }
-        
+        // recuperation de l'id
+        if (isset($_GET['modifier'])) {
+            $idModifier = $_GET['modifier'];
+            foreach ($_SESSION['articles'] as $art) {
+                if ($art['id'] == $idModifier) {
+                    $articleModifier = $art;
+                    break;
+                }
+            }
+        }
+        // je met a jour l'article a modifier 
+        if (isset($_POST['modifier_article'])) {
+            foreach ($_SESSION['articles'] as &$art) {
+                if ($art['id'] == $_POST['id']) {
+                    $art['article'] = $_POST['article'];
+                    $art['prix_unitaire'] = $_POST['prix_unitaire'];
+                    $art['quantite'] = $_POST['quantite'];
+                    break;
+                }
+            }
+        }
+         
+
         require_once "../views/form.commandes.html.php";
     }
 }
