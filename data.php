@@ -35,7 +35,7 @@ $clients = [
                 "date" => "2025-01-13",
                 "montant" => 1200, // 300 * 4
                 "statut" => "En attente",
-                "produits" => [
+                "articles" => [
                     [
                         "id" => 2,
                         "article" => "Produit B",
@@ -58,7 +58,7 @@ $clients = [
                 "date" => "2025-01-12",
                 "montant" => 1200, // 400 * 3
                 "statut" => "Confirmée",
-                "produits" => [
+                "articles" => [
                     [
                         "id" => 3,
                         "titre" => "Produit C",
@@ -81,7 +81,7 @@ $clients = [
                 "date" => "2025-01-12",
                 "montant" => 3000, // 1500 * 2
                 "statut" => "En attente",
-                "produits" => [
+                "articles" => [
                     [
                         "id" => 4,
                         "titre" => "Produit D",

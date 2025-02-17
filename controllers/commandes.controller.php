@@ -31,23 +31,23 @@ if (isset($_REQUEST['page'])) {
             $tel = $_GET['tel'];
             $client = getClientByTel($tel);
             $_SESSION['client'] = $client;
-        //  var_dump($_SESSION['client']);  
+            //  var_dump($_SESSION['client']);  
         }
         if (!isset($_SESSION['articles'])) {
             $_SESSION['articles'] = [];
         }
-        
+
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['ajouter'])) {
             // Récupérer les valeurs du formulaire
-            $id = $_POST['id']?? null;
+            $id = $_POST['id'] ?? null;
             $article = $_POST['article'];
             $prix_unitaire = $_POST['prix_unitaire'];
             $quantite = $_POST['quantite'];
-        
+
             if (isset($_POST['prix_unitaire']) && isset($_POST['quantite'])) {
                 $prix_unitaire = (float) $_POST['prix_unitaire'];
                 $quantite = (int) $_POST['quantite'];
-                
+
                 if (is_numeric($prix_unitaire) && is_numeric($quantite)) {
                     $montant = $prix_unitaire * $quantite;
                 } else {
@@ -59,11 +59,11 @@ if (isset($_REQUEST['page'])) {
                 exit;
             }
             // Calculer le montant
-            $prix_unitaire = (float) $_POST['prix_unitaire']; 
-            $quantite = (int) $_POST['quantite']; 
+            $prix_unitaire = (float) $_POST['prix_unitaire'];
+            $quantite = (int) $_POST['quantite'];
             // Calculer le montant
             $montant = $prix_unitaire * $quantite;
-            
+
             // Ajouter l'article au tableau de session
             $_SESSION['articles'][] = [
                 'id' => $id,
@@ -72,23 +72,19 @@ if (isset($_REQUEST['page'])) {
                 'quantite' => $quantite,
                 'montant' => $montant
             ];
-             
         }
-         // calculer le total
-              $total = array_sum(array_column($_SESSION['articles'], 'montant'));
-               number_format($total) . ' FCFA';
-              $_SESSION['total'] = $total;
-        
+        // calculer le total
+        $total = array_sum(array_column($_SESSION['articles'], 'montant'));
+        number_format($total) . ' FCFA';
+        $_SESSION['total'] = $total;
+
         if (isset($_GET['supprimer'])) {
             $id_to_delete = $_GET['supprimer'];
-            foreach ($_SESSION['articles'] as $key => $art) {
-                if ($art['id'] == $id_to_delete) {
-                    unset($_SESSION['articles'][$key]);
-                    $_SESSION['articles'] = array_values($_SESSION['articles']);
-                    header("Location: ?controller=commandes&page=ajout"); 
+            unset($_SESSION['articles'][$id_to_delete]);
+            $_SESSION['articles'] = array_values($_SESSION['articles']);
+                    header("Location: ?controller=commandes&page=ajout");
                     exit;
-                }
-            }
+            
         }
         // recuperation de l'id
         if (isset($_GET['modifier'])) {
@@ -110,9 +106,44 @@ if (isset($_REQUEST['page'])) {
                     break;
                 }
             }
+            // Recharger la page pour vider les champs
+            header("Location: " . $_SERVER['PHP_SELF'] . "?controller=commandes&page=ajout");
+            exit();
         }
-         
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['commander'])) {
+
+           $tel = isset($_POST['tel']) ? trim($_POST['tel']) : '';
+           if (empty($tel)) {
+            echo "Erreur : Numéro de téléphone manquant.";
+            exit;
+        }
+    
+
+    // Calcul du montant total
+    $montantTotal = 0;
+    if (!empty($_SESSION['articles'])) {
+        foreach ($_SESSION['articles'] as $article) {
+            $montantTotal += $article['prix'] * $article['quantite'];
+        }
+    }
+        // recuperation de l'id
+        $idCommande = uniqid();
+        $commande = [
+            'id' => $idCommande,
+            'articles' => $_SESSION['articles'],
+            'tel' => $tel,
+            'date' => date('Y-m-d H:i:s'),
+            ];
+            $_SESSION['commandes'][$tel][] = $commande;
+            redirect('commandes', 'Allcommandes');
+            
+        }
+        $Allcommandes = $_SESSION['commandes'] ?? [];
 
         require_once "../views/form.commandes.html.php";
+    } elseif ($page == "Allcommandes") {
+        // unset($_SESSION['clients'],$_SESSION['commandes']);
+        $Allcommandes = recupToutLesCommandedes();
+        require_once "../views/Allcommandes.html.php";
     }
 }

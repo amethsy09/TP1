@@ -13,7 +13,7 @@ $currentPage = isset($_GET['view']) ? (int) $_GET['view'] : 2;
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded">OK</button>
         </form>
         <div class="flex justify-end item-center">
-            <a href="<?= WEBROOT?>?controller=commandes&page=ajout" class="inline-block px-6 py-3 bg-blue-500 text-white font-medium text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out ">NOUVEAU</a>
+            <a href="" class="inline-block px-6 py-3 bg-blue-500 text-white font-medium text-sm leading-tight uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out ">NOUVEAU</a>
 
         </div>
     </div>

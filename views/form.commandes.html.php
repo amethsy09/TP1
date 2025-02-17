@@ -45,48 +45,54 @@
                 <?php else : ?>
                     <button type="submit" name="ajouter" class="bg-blue-600 text-white px-6 py-3 rounded-full hover:bg-blue-700 transition duration-300">Ajouter</button>
                 <?php endif; ?>
-                </form>
+            </form>
 
 
-                <!-- Tableau des Articles -->
-                <table class="w-full table-auto border-collapse border border-gray-300 shadow-md">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="border p-3">Article</th>
-                            <th class="border p-3">Prix</th>
-                            <th class="border p-3">Quantité</th>
-                            <th class="border p-3">Montant</th>
-                            <th class="border p-3">Action</th>
+            <!-- Tableau des Articles -->
+            <table class="w-full table-auto border-collapse border border-gray-300 shadow-md">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="border p-3">Article</th>
+                        <th class="border p-3">Prix</th>
+                        <th class="border p-3">Quantité</th>
+                        <th class="border p-3">Montant</th>
+                        <th class="border p-3">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <?php foreach ($_SESSION['articles'] as $k => $art) : ?>
+                        <tr>
+                            <td class="border p-3"><?= htmlspecialchars($art['article']); ?></td>
+                            <td class="border p-3"><?= number_format((float)$art['prix_unitaire'], 0, ',', ' ') . ' FCFA'; ?></td>
+                            <td class="border p-3"><?= htmlspecialchars($art['quantite']); ?></td>
+                            <td class="border p-3">
+                                <?php
+                                $montant = (float)$art['prix_unitaire'] * (int)$art['quantite'];
+                                echo number_format($montant, 0, ',', ' ') . ' FCFA';
+                                ?>
+                            </td>
+                            <td class="border p-3">
+                                <a href="<?= WEBROOT ?>?controller=commandes&page=ajout&supprimer=<?php echo $k; ?>" class="text-red-600 hover:text-red-800">🗑</a>
+                                <a href="<?= WEBROOT ?>?controller=commandes&page=ajout&modifier=<?php echo $art['id']; ?>" class="text-red-600 hover:text-red-800">⚙</a>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
+                    <?php endforeach; ?>
 
-                        <?php foreach ($_SESSION['articles'] as $art) : ?>
-                            <tr>
-                                <td class="border p-3"><?= htmlspecialchars($art['article']); ?></td>
-                                <td class="border p-3"><?= number_format((float)$art['prix_unitaire'], 0, ',', ' ') . ' FCFA'; ?></td>
-                                <td class="border p-3"><?= htmlspecialchars($art['quantite']); ?></td>
-                                <td class="border p-3">
-                                    <?php
-                                    $montant = (float)$art['prix_unitaire'] * (int)$art['quantite'];
-                                    echo number_format($montant, 0, ',', ' ') . ' FCFA';
-                                    ?>
-                                </td>
-                                <td class="border p-3">
-                                    <a href="<?= WEBROOT ?>?controller=commandes&page=ajout&supprimer=<?php echo $art['id']; ?>" class="text-red-600 hover:text-red-800">🗑</a>
-                                    <a href="<?= WEBROOT ?>?controller=commandes&page=ajout&modifier=<?php echo $art['id']; ?>" class="text-red-600 hover:text-red-800">⚙</a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-
-                    </tbody>
-                </table>
-                <!-- Total & Commander -->
+                </tbody>
+            </table>
+            <!-- Total & Commander -->
+            <form action="" method="POST">
+            <input type="hidden" name="tel" value="<?= isset($_GET['tel']) ? htmlspecialchars($_GET['tel']) : '' ?>">
                 <div class="mt-6 flex justify-between items-center">
                     <span class="text-2xl font-bold text-gray-800">Total :<?php echo $total; ?> FCFA</span>
-                    <button type="submit" class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition duration-300">Commander</button>
+                    <button type="submit" name="commander" class="bg-green-600 text-white px-6 py-3 rounded-full hover:bg-green-700 transition duration-300">Commander</button>
                 </div>
+            </form>
         </div>
+        <?php if (isset($_GET['success'])): ?>
+            <p style="color: green;">Commande enregistrée avec succès !</p>
+        <?php endif; ?>
     </div>
 </body>
 
